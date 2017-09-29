@@ -65,7 +65,7 @@ module Makara
 
     def stick_to_master!(write_to_cache = true)
       @master_context = Makara::Context.get_current
-      Makara::Cache.write("makara::#{@master_context}-#{@id}", '1', @ttl) if write_to_cache
+      Makara::Context.cache_current(@id, @ttl) if write_to_cache
     end
 
     def method_missing(m, *args, &block)
@@ -172,7 +172,7 @@ module Makara
 
     def previously_stuck_to_master?
       return false unless @sticky
-      !!Makara::Cache.read("makara::#{Makara::Context.get_previous}-#{@id}")
+      Makara::Context.cached_previous?(@id)
     end
 
 
